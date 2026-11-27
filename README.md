@@ -14,7 +14,7 @@ spectroscopy, using forward models (petitRADTRANS) and Bayesian retrievals
 
 The code was written during the thesis. It is a student project, and some
 scripts keep the style and comments of the notebooks they came from.
-The release tagged `thesis-submission` is the code as submitted with the thesis.
+The version tagged 'thesis-submission' is the code as submitted with the thesis.
 
 ## Results quoted in the thesis (for reference)
 - **GJ 1132 b:** retrieved mean molecular weight about 28 amu; reduced chi-square
