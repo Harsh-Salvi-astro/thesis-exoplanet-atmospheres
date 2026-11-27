@@ -1,0 +1,149 @@
+################################
+# GLOBAL
+################################
+[Global]
+xsec_path = taurex_input/gj1132b/xsec
+cia_path  = taurex_input/gj1132b/cia
+verbose = True
+
+################################
+# PLANET 
+################################
+[Planet]
+planet_type = simple
+# 1.84 M_earth = 0.00578 M_jup
+planet_mass = 0.00578        
+# 1.192 R_earth = 0.1063 R_jup
+planet_radius = 0.1063      
+
+################################
+# STAR (Xue et al. 2024)
+################################
+[Star]
+star_type = blackbody
+temperature = 3229        # Teff (K)
+radius = 0.2211           # R_Sun
+mass = 0.1945             # M_Sun
+
+################################
+# PRESSURE GRID
+################################
+[Pressure]
+profile_type = simple
+atm_min_pressure = 0.1
+atm_max_pressure = 1e7
+nlayers = 100
+
+################################
+# TEMPERATURE PROFILE
+################################
+[Temperature]
+profile_type = isothermal
+T = 583.8
+
+################################
+# CHEMISTRY
+################################
+[Chemistry]
+
+chemistry_type = taurex
+
+fill_gases = N2, He
+
+ratio = 1e-9
+
+# The 6 molecules used in the paper
+[[H2O]]
+gas_type = constant
+mix_ratio = 7e-5        
+
+[[CO2]]
+gas_type = constant
+mix_ratio = 1e-8         
+
+[[CH4]]
+gas_type = constant
+mix_ratio = 1e-7
+
+[[CO]]
+gas_type = constant
+mix_ratio = 1e-6
+
+
+################################
+# MODEL
+################################
+[Model]
+model_type = transmission
+
+[[Absorption]]
+# Molecules: H2O, CO2, CH4, CO
+
+[[CIA]]
+
+cia_pairs = N2-N2,
+
+[[Rayleigh]]
+
+
+[[SimpleClouds]]
+
+clouds_pressure = 1000
+
+################################
+# FITTING PARAMETERS
+################################
+[Fitting]
+
+planet_radius:fit = True
+planet_radius:bounds = 0.05, 0.15
+
+T:fit = True
+T:bounds = 300, 1000
+
+H2O:fit = True
+H2O:mode = log
+H2O:bounds = 1e-12, 1e-2
+
+CH4:fit = True
+CH4:mode = log
+CH4:bounds = 1e-12, 1e-2
+
+CO:fit = True
+CO:mode = log
+CO:bounds = 1e-12, 1e-2
+
+CO2:fit = True
+CO2:mode = log
+CO2:bounds = 1e-12, 1e-2
+
+
+
+clouds_pressure:fit = True
+clouds_pressure:mode = log
+clouds_pressure:bounds = 10, 1e6
+
+
+
+################################
+# OPTIMIZER
+################################
+[Optimizer]
+optimizer = multinest
+multi_nest_path = /opt/anaconda3/envs/taurex/lib
+multinest_prefix = gj1132b_
+num_live_points = 1500
+evidence_tolerance = 0.5
+
+################################
+# OBSERVATION
+################################
+[Observation]
+observed_spectrum = data/gj1132b/gj1132b_spectrum.dat
+
+################################
+# OUTPUT
+################################
+[Output]
+output_type = hdf5
+output_file = data/gj1132b/gj1132b_retrieval.h5

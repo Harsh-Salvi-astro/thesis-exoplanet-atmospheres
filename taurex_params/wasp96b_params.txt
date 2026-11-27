@@ -1,0 +1,153 @@
+################################
+# GLOBAL
+################################
+[Global]
+xsec_path = taurex_input/wasp96b/xsec
+cia_path  = taurex_input/wasp96b/cia
+verbose = True
+
+################################
+# PLANET (McGruder 2023)
+################################
+[Planet]
+planet_type = simple
+planet_mass = 0.47        # M_Jupiter
+planet_radius = 1.23      # R_Jupiter
+
+################################
+# STAR (McGruder 2023)
+################################
+[Star]
+star_type = blackbody
+temperature = 5678        # Stellar Teff (K)
+radius = 1.055            # R_Sun
+mass = 1.030               # M_Sun
+
+################################
+# PRESSURE GRID (Corrected to Pascals)
+################################
+[Pressure]
+profile_type = simple
+atm_min_pressure = 0.1
+atm_max_pressure = 1e5
+nlayers = 100
+
+
+################################
+# TEMPERATURE PROFILE
+################################
+[Temperature]
+profile_type = isothermal
+T = 1350
+
+################################
+# CHEMISTRY
+################################
+[Chemistry]
+chemistry_type = taurex
+
+fill_gases = H2, He
+# TauREx will assign 0.17 to He and the rest (0.83) to H2
+ratio = 0.17
+
+# Main species for WASP-96 b
+[[H2O]]
+gas_type = constant
+mix_ratio = 8.9e-5        # Starting at your pRT best 10^-4.05
+
+[[Na]]
+gas_type = constant
+mix_ratio = 1e-4          # Starting at 10^-4.0
+
+[[K]]
+gas_type = constant
+mix_ratio = 1e-7          # Starting at 10^-7.0
+
+[[CO2]]
+gas_type = constant
+mix_ratio = 1e-6          # Starting at 10^-6.0
+
+
+
+################################
+# MODEL
+################################
+[Model]
+model_type = transmission
+
+
+# 1. Molecular line absorption (H2O, Na, K, CO2)
+[[Absorption]]
+
+# 2. Collision-Induced Absorption (H2-H2, H2-He)
+[[CIA]]
+cia_pairs = H2-H2, H2-He
+
+# 3. Rayleigh Scattering (H2, He)
+[[Rayleigh]]
+
+
+################################
+# CLOUD CONTRIBUTION
+################################
+[[SimpleClouds]]
+# Starting value 2200 Pa (0.022 bar from pRT)
+clouds_pressure = 2200     
+
+################################
+# FITTING PARAMETERS
+################################
+[Fitting]
+
+planet_radius:fit = True
+planet_radius:bounds = 0.8, 1.6
+
+T:fit = True
+T:bounds = 800, 2000
+
+H2O:fit = True
+H2O:mode = log
+H2O:bounds = 1e-12, 1e-2
+
+Na:fit = True
+Na:mode = log
+Na:bounds = 1e-12, 1e-2
+
+K:fit = True
+K:mode = log
+K:bounds = 1e-12, 1e-2
+
+CO2:fit = True
+CO2:mode = log
+CO2:bounds = 1e-12, 1e-2
+
+# Fitting cloud pressure in Pascals
+clouds_pressure:fit = True
+clouds_pressure:mode = log
+# Bounds: 10 Pa (0.1 mbar) to 1e6 Pa (10 bar)
+clouds_pressure:bounds = 10, 1e6
+
+################################
+# OPTIMIZER
+################################
+[Optimizer]
+optimizer = multinest
+multi_nest_path = /opt/anaconda3/envs/taurex/lib
+multinest_prefix = wasp96b_
+num_live_points = 1000
+evidence_tolerance = 0.5
+
+
+
+################################
+# OBSERVATION
+################################
+[Observation]
+observed_spectrum = data/wasp96b/wasp96b_spectrum.dat
+
+################################
+# OUTPUT
+################################
+[Output]
+output_type = hdf5
+output_file = data/wasp96b/wasp96b_retrieval.h5

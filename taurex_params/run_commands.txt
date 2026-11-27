@@ -1,0 +1,16 @@
+# Commands used for the TauREx retrievals (TauREx 3.3.2, MultiNest).
+# Run from the main repository folder, in the TauREx environment.
+# The parameter files set the model, priors, number of live points and the
+# observed spectrum. The output .h5 files are large and are not in the repository.
+# Set multi_nest_path in each parameter file to the folder where MultiNest is
+# installed on your computer, and put the TauREx cross-section (xsec) and CIA
+# files in taurex_input/<planet>/xsec and taurex_input/<planet>/cia.
+
+# GJ 1132 b (1500 live points)
+taurex -i "taurex_params/gj1132b_params.txt" -R -o "data/gj1132b/gj1132b_retrieval.h5"
+
+# WASP-96 b (1000 live points)
+taurex -i "taurex_params/wasp96b_params.txt" -R -o "data/wasp96b/wasp96b_retrieval.h5"
+
+# CoRoT-7 b (synthetic benchmark, 1500 live points)
+taurex -i "taurex_params/corot7b_params.txt" -R -o "data/corot7b/corot7b_retrieval.h5"

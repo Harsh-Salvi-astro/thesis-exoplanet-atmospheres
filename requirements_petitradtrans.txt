@@ -1,0 +1,8 @@
+# Environment used for the petitRADTRANS forward models (scripts 01/02 in
+# scripts/corot7b, scripts/gj1132b, scripts/wasp96b). I used Python 3.10.
+# petitRADTRANS also needs its opacity (line list) files; see its documentation.
+petitRADTRANS==3.2.0
+numpy
+scipy
+matplotlib
+pandas

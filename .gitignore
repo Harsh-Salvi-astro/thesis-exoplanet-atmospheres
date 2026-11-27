@@ -1,0 +1,17 @@
+# Data and results: too large, or other authors' data
+data/*
+!data/README.md
+!data/corot7b/
+data/corot7b/*
+!data/corot7b/corot7b_transmission_noisy.dat
+results/
+*.h5
+*.hdf5
+multinest/
+chains/
+
+# Mac and Jupyter clutter
+.DS_Store
+.ipynb_checkpoints/
+__pycache__/
+.env

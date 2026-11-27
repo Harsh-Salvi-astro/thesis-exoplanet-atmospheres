@@ -1,0 +1,158 @@
+################################
+# GLOBAL
+################################
+[Global]
+xsec_path = taurex_input/corot7b/xsec
+cia_path  = taurex_input/corot7b/cia
+verbose = True
+
+################################
+# PLANET (1.528 Re, 6.056 Me)
+################################
+[Planet]
+planet_type = simple
+# 6.056 M_earth = 0.0191 M_jup
+planet_mass = 0.0191        
+# 1.528 R_earth = 0.1363 R_jup
+planet_radius = 0.1363      
+
+################################
+# STAR (Bruntt et al. 2010)
+################################
+[Star]
+star_type = blackbody
+temperature = 5250        
+radius = 0.864            
+mass = 0.91               
+
+################################
+# PRESSURE GRID (Pascal Rule: 1e-6 bar to 100 bar)
+################################
+[Pressure]
+profile_type = simple
+atm_min_pressure = 0.1
+atm_max_pressure = 1e7
+nlayers = 100
+
+################################
+# TEMPERATURE PROFILE
+################################
+[Temperature]
+profile_type = isothermal
+# Equilibrium Temperature (Teq)
+T = 1756.0
+
+################################
+# CHEMISTRY (Rock-Vapor Secondary Atmosphere)
+################################
+[Chemistry]
+chemistry_type = taurex
+
+# Using Oxygen as the byproduct of silicate vaporization
+fill_gases = O2, He
+# Tiny Helium ratio ensures background is effectively 100% Oxygen
+ratio = 1e-9
+
+# Species defined in Schaefer & Fegley (2012)
+[[SiO]]
+gas_type = constant
+mix_ratio = 1e-1
+
+[[Na]]
+gas_type = constant
+mix_ratio = 1e-2
+
+[[K]]
+gas_type = constant
+mix_ratio = 1e-3
+
+[[CO]]
+gas_type = constant
+mix_ratio = 1e-6
+
+[[CO2]]
+gas_type = constant
+mix_ratio = 1e-6
+
+################################
+# MODEL (Turn ON the Physics Engines)
+################################
+[Model]
+model_type = transmission
+
+[[Absorption]]
+# Handles SiO, Na, K, Fe, Mg, CO, CO2
+
+[[CIA]]
+# Collision-induced absorption for Oxygen-rich atmosphere
+# Trailing comma fix included to prevent naming error
+cia_pairs = O2-O2,
+
+[[Rayleigh]]
+# Oxygen and Mineral Scattering
+
+[[SimpleClouds]]
+# Starting value 1000 Pa (10 mbar)
+clouds_pressure = 1000
+
+################################
+# FITTING PARAMETERS (Log Scale)
+################################
+[Fitting]
+
+planet_radius:fit = True
+planet_radius:bounds = 0.1, 0.2
+
+T:fit = True
+T:bounds = 1000.0, 3500.0
+
+# --- MINERAL VAPORS (Upper Limit 50% / 0.5) ---
+SiO:fit = True
+SiO:mode = log
+SiO:bounds = 1e-12, 0.5
+
+Na:fit = True
+Na:mode = log
+Na:bounds = 1e-12, 0.5
+
+K:fit = True
+K:mode = log
+K:bounds = 1e-12, 0.5
+
+# --- TRACE SPECIES (Upper Limit 10% / 1e-1) ---
+CO:fit = True
+CO:mode = log
+CO:bounds = 1e-12, 1e-1
+
+CO2:fit = True
+CO2:mode = log
+CO2:bounds = 1e-12, 1e-1
+
+# --- CLOUDS ---
+clouds_pressure:fit = True
+clouds_pressure:mode = log
+# Bounds: 10 Pa (0.1 mbar) to 1e6 Pa (10 bar)
+clouds_pressure:bounds = 10, 1e6
+
+################################
+# OPTIMIZER (High-Precision Run)
+################################
+[Optimizer]
+optimizer = multinest
+multi_nest_path = /opt/anaconda3/envs/taurex/lib
+multinest_prefix = corot7b_
+num_live_points = 1500
+evidence_tolerance = 0.5
+
+################################
+# OBSERVATION (20ppm Noisy Simulation)
+################################
+[Observation]
+observed_spectrum = data/corot7b/corot7b_synthetic_spectrum.dat
+
+################################
+# OUTPUT
+################################
+[Output]
+output_type = hdf5
+output_file = data/corot7b/corot7b_retrieval.h5

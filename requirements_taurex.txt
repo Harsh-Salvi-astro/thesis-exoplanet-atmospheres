@@ -1,0 +1,10 @@
+# Environment used for the TauREx retrievals and the plot scripts that read the
+# TauREx output (.h5). I used Python 3.11. MultiNest and pymultinest must be
+# installed separately (they need a Fortran compiler).
+taurex==3.3.2
+numpy
+scipy
+matplotlib
+pandas
+h5py
+pymultinest
